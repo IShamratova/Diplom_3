@@ -1,150 +1,152 @@
 from data.data import TestData
 from locators.constructor_and_feed_page_locators import ConstructorAndFeedPageLocators
 from locators.personal_account_page_locators import PersonalAccountPageLocators
-from pages.login_page import LoginPage
+from pages.order_page import OrderPage
 
 
 class TestOrder:
 
-    def test_order(self, driver, created_user):
+    def test_logged_user_can_create_order(self, driver, created_user):
         # Создание объекта страницы
-        order_page = LoginPage(driver)
+        order_page = OrderPage(driver)
+
+        # Открытие главной страницы
+        order_page.open_url(TestData.BASE_URL)
+
+        # Логин пользователя
+        order_page.user_login(created_user["email"], created_user["password"])
+
+        # Оформление заказа
+        order_page.create_order()
+
+        # Проверка идентификатора созданного заказа
+        order_page.check_created_order_id("9999")
+
+    def test_order_in_work(self, driver, created_user):
+        # Создание объекта страницы
+        order_page = OrderPage(driver)
+
+        # Открытие главной страницы
+        order_page.open_url(TestData.BASE_URL)
+
+        # Логин пользователя
+        order_page.user_login(created_user["email"], created_user["password"])
+
+        # Оформление заказа
+        order_page.create_order()
+
+        # Проверка идентификатора созданного заказа на неравенство "9999"
+        order_page.check_created_order_id("9999")
+
+        # Сохранение идентификатора заказа
+        created_order_id = order_page.return_created_order_id()
+
+        # Клик по кнопке закрытия модального окна с деталями созданного заказа
+        order_page.click_close_order_details_modal_button()
+
+        # Клик по кнопке "Лента Заказов"
+        order_page.click_feed_button()
+
+        # Проверка нахождения номера созданного заказа в разделе "В работе"
+        order_page.check_created_order_id_in_work(created_order_id)
+
+    def test_order_counts(self, driver, created_user):
+        # Создание объекта страницы
+        order_page = OrderPage(driver)
 
         # Открытие главной страницы
         order_page.open_url(TestData.BASE_URL)
 
         # Клик по кнопке "Лента Заказов"
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_FEED)
+        order_page.click_feed_button()
 
-        # Явное ожидание для загрузки кнопки "Лента Заказов"
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.HEADER_ORDER_FEED, 3)
+        # Сохранение (проверка и выдача) значения счётчика "Выполнено за всё время" на неравенство пустой строке
+        value_count_orders_total = order_page.check_and_return_orders_done_total_quantity("")
 
-        # Проверка количества всех заказов на неравенство пустой строке
-        order_page.wait_for_text_differing_from_given_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TOTAL, "", 10)
+        # Сохранение (проверка и выдача) значения счётчика "Выполнено за сегодня" на неравенство пустой строке
+        value_count_orders_today = order_page.check_and_return_orders_done_today_quantity("")
 
-        # Сохранение промежуточного значения количества всех заказов
-        count_orders_total = int(order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TOTAL).text.strip())
+        # Логин пользователя
+        order_page.user_login(created_user["email"], created_user["password"])
 
-        # Проверка количества заказов за сегодня на неравенство пустой строке
-        order_page.wait_for_text_differing_from_given_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TODAY, "", 10)
+        # Оформление заказа
+        order_page.create_order()
 
-        # Сохранение промежуточного значения количества заказов за сегодня
-        count_orders_today = int(order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TODAY).text.strip())
-
-        # Клик по кнопке "Личный Кабинет"
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_PERSONAL_ACCOUNT)
-
-        # Ввод учетных данных
-        order_page.login(created_user["email"], created_user["password"])
-
-        # Явное ожидание для загрузки страницы после входа
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.BUTTON_ORDER, 3)
-
-        # Перетаскивание элемента ингредиента
-        order_page.drag_n_drop_element(ConstructorAndFeedPageLocators.BUTTON_BUN_FLUO, ConstructorAndFeedPageLocators.SECTION_DRAG_BUN_HERE)
-
-        # Скроллинг до элемента ингредиента
-        order_page.scroll_to_element_by_xpath(ConstructorAndFeedPageLocators.BUTTON_SAUCE_SPICY)
-
-        # Перетаскивание элемента ингредиента
-        order_page.drag_n_drop_element(ConstructorAndFeedPageLocators.BUTTON_SAUCE_SPICY, ConstructorAndFeedPageLocators.SECTION_DRAG_BUN_HERE)
-
-        # Скроллинг до элемента ингредиента
-        order_page.scroll_to_element_by_xpath(ConstructorAndFeedPageLocators.BUTTON_FILLING_PROTO)
-
-        # Перетаскивание элемента ингредиента
-        order_page.drag_n_drop_element(ConstructorAndFeedPageLocators.BUTTON_FILLING_PROTO, ConstructorAndFeedPageLocators.SECTION_DRAG_BUN_HERE)
-
-        # Скроллинг до элемента ингредиента
-        order_page.scroll_to_element_by_xpath(ConstructorAndFeedPageLocators.BUTTON_FILLING_CHEESE)
-
-        # Перетаскивание элемента ингредиента
-        order_page.drag_n_drop_element(ConstructorAndFeedPageLocators.BUTTON_FILLING_CHEESE, ConstructorAndFeedPageLocators.SECTION_DRAG_BUN_HERE)
-
-        # Скроллинг до кнопки "Оформить заказ"
-        order_page.scroll_to_element_by_xpath(ConstructorAndFeedPageLocators.BUTTON_ORDER)
-
-        # Клик по кнопке "Оформить заказ"
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_ORDER)
-
-        # Явное ожидание для загрузки текста модального окна
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDER_ID, 3)
-
-        # Проверка идентификатора заказа на неравенство "9999"
-        order_page.wait_for_text_differing_from_given_by_timeout(ConstructorAndFeedPageLocators.HEADER_ORDER_ID, "9999", 10)
+        # Проверка идентификатора созданного заказа на неравенство "9999"
+        order_page.check_created_order_id("9999")
 
         # Сохранение идентификатора заказа
-        created_order_id = order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.HEADER_ORDER_ID).text.strip()
+        created_order_id = order_page.return_created_order_id()
 
-        # Клик по кнопке закрытия модального окна
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_CLOSE_MODAL)
-
-        # Явное ожидание для загрузки кнопки "Лента Заказов"
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.BUTTON_FEED, 3)
+        # Клик по кнопке закрытия модального окна с деталями созданного заказа
+        order_page.click_close_order_details_modal_button()
 
         # Клик по кнопке "Лента Заказов"
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_FEED)
+        order_page.click_feed_button()
 
-        # Явное ожидание для загрузки кнопки "Лента Заказов"
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.HEADER_ORDER_FEED, 3)
+        # Сохранение (проверка и выдача) нового значения счётчика "Выполнено за всё время" на неравенство предыдущему значению
+        new_value_count_orders_total = order_page.check_and_return_orders_done_total_quantity(value_count_orders_total)
 
-        # Проверка идентификаторов заказов в работе на неравенство строке "Все текущие заказы готовы!"
-        order_page.wait_for_text_differing_from_given_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDERS_IN_WORK_FIRST_LIST_ITEM, ConstructorAndFeedPageLocators.TEXT_ORDERS_IN_WORK_ALL_DONE, 30)
+        # Проверка увеличения значения счётчика "Выполнено за всё время"
+        order_page.check_incrementation_of_orders_count(value_count_orders_total, new_value_count_orders_total)
 
-        # Проверка нахождения номера заказа в работе
-        assert any(created_order_id in ''.join(li.text.strip()) for li in order_page.find_elements_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDERS_IN_WORK_LIST_ITEMS))
+        # Прокрутка страницы до счётчика "Выполнено за сегодня"
+        order_page.scroll_to_orders_done_today()
 
-        # Проверка количества всех заказов на неравенство предыдущему значению
-        order_page.wait_for_text_differing_from_given_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TOTAL, count_orders_total, 10)
+        # Сохранение (проверка и выдача) нового значения счётчика "Выполнено за сегодня" на неравенство предыдущему значению
+        new_value_count_orders_today = order_page.check_and_return_orders_done_today_quantity(value_count_orders_today)
 
-        # Проверка увеличения промежуточного значения количества всех заказов
-        assert count_orders_total < int(order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TOTAL).text.strip())
+        # Проверка увеличения значения счётчика "Выполнено за сегодня"
+        order_page.check_incrementation_of_orders_count(value_count_orders_today, new_value_count_orders_today)
 
-        # Скроллинг до элемента "Выполнено за сегодня"
-        order_page.scroll_to_element_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TODAY)
+    def test_order_history(self, driver, created_user):
+        # Создание объекта страницы
+        order_page = OrderPage(driver)
 
-        # Проверка количества заказов за сегодня на неравенство предыдущему значению
-        order_page.wait_for_text_differing_from_given_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TODAY, count_orders_today, 10)
+        # Открытие главной страницы
+        order_page.open_url(TestData.BASE_URL)
 
-        # Проверка увеличения промежуточного значения количества заказов за сегодня
-        assert count_orders_today < int(order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDERS_DONE_TODAY).text.strip())
+        # Клик по кнопке "Лента Заказов"
+        order_page.click_feed_button()
 
-        # Скроллинг до кнопки "Личный Кабинет"
-        order_page.scroll_to_element_by_xpath(ConstructorAndFeedPageLocators.BUTTON_PERSONAL_ACCOUNT)
+        # Логин пользователя
+        order_page.user_login(created_user["email"], created_user["password"])
 
-        # Явное ожидание для загрузки идентификатора заказа
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDER_HISTORY_LIST_ITEM + '[contains(text(), "#0' + created_order_id + '")]', 15)
+        # Оформление заказа
+        order_page.create_order()
 
-        # Клик по идентификатору заказа
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDER_HISTORY_LIST_ITEM + '[contains(text(), "#0' + created_order_id + '")]/ancestor::a')
+        # Проверка идентификатора созданного заказа на неравенство "9999"
+        order_page.check_created_order_id("9999")
 
-        # Явное ожидание для загрузки страницы профиля
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.HEADER_ORDER_DETAILS, 3)
+        # Сохранение идентификатора созданного заказа
+        created_order_id = order_page.return_created_order_id()
 
-        assert ConstructorAndFeedPageLocators.TEXT_ORDER_NAME == order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.HEADER_ORDER_DETAILS).text.strip()
+        # Клик по кнопке закрытия модального окна с деталями созданного заказа
+        order_page.click_close_order_details_modal_button()
 
-        # Клик по кнопке закрытия модального окна
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_CLOSE_MODAL)
+        # Клик по кнопке "Лента Заказов"
+        order_page.click_feed_button()
+
+        # Клик по идентификатору созданного заказа
+        order_page.click_created_order_id(created_order_id)
+
+        # Проверка наименования созданного заказа
+        order_page.check_order_name()
+
+        # Клик по кнопке закрытия модального окна с деталями созданного заказа
+        order_page.click_close_order_details_modal_button()
 
         # Клик по кнопке "Личный Кабинет"
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.BUTTON_PERSONAL_ACCOUNT)
-
-        # Явное ожидание для загрузки страницы профиля
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(PersonalAccountPageLocators.BUTTON_ORDER_HISTORY, 3)
+        order_page.click_personal_account_button()
 
         # Клик по кнопке "История заказов"
-        order_page.click_element_by_script_by_xpath(PersonalAccountPageLocators.BUTTON_ORDER_HISTORY)
+        order_page.click_order_history_link()
 
-        # Проверка URL-адреса на соответствие истории заказов
-        order_page.check_url(TestData.BASE_URL + TestData.ROUTES["order_history"])
+        # Проверка URL-адреса на соответствие страницы "История заказов"
+        order_page.check_order_history_url()
 
-        # Явное ожидание для загрузки созданного заказа
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.TEXT_ORDER_HISTORY_DIV + '[contains(text(), "#0' + created_order_id + '")]', 3)
+        # Клик по номеру созданного заказа
+        order_page.click_created_order_number(created_order_id)
 
-        # Клик по идентификатору заказа
-        order_page.click_element_by_script_by_xpath(ConstructorAndFeedPageLocators.TEXT_ORDER_HISTORY_DIV + '[contains(text(), "#0' + created_order_id + '")]')
-
-        # Явное ожидание для загрузки модального окна
-        order_page.wait_for_visibility_of_element_by_xpath_by_timeout(ConstructorAndFeedPageLocators.HEADER_ORDER_DETAILS, 3)
-
-        assert ConstructorAndFeedPageLocators.TEXT_ORDER_NAME == order_page.find_element_by_xpath(ConstructorAndFeedPageLocators.HEADER_ORDER_DETAILS).text.strip()
+        # Проверка наименования созданного заказа
+        order_page.check_order_name()

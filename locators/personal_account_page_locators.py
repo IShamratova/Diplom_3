@@ -1,12 +1,22 @@
 class PersonalAccountPageLocators:
 
-    # Кнопка «Профиль»
-    BUTTON_PROFILE = './/a[text()="Профиль"]'
-    # Кнопка «История заказов»
-    BUTTON_ORDER_HISTORY = './/a[text()="История заказов"]'
+    # Кнопка "Войти"
+    BUTTON_ENTER = './/button[text()="Войти"]'
     # Кнопка «Выход»
     BUTTON_EXIT = './/button[text()="Выход"]'
-
+    # Поле ввода "Email"
+    INPUT_EMAIL = './/label[text()="Email"]/following-sibling::input'
+    # Поле ввода "Пароль"
+    INPUT_PASSWORD = './/label[text()="Пароль"]/following-sibling::input'
+    # Ссылка «Профиль»
+    LINK_PROFILE = './/a[text()="Профиль"]'
+    # Ссылка «История заказов»
+    LINK_ORDER_HISTORY = './/a[text()="История заказов"]'
+    # Модальное окно
+    MODAL_WINDOW = [
+        './/section[contains(@class, "Modal_modal__P3_V5")]',
+        './/div[contains(@class, "Modal_modal_overlay__x2ZCr")]'
+    ]
     # Секция истории заказов
     SECTION_ORDER_HISTORY = './/div[contains(@class, "OrderHistory")]'
 

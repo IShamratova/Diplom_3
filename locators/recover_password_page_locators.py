@@ -12,3 +12,8 @@ class RecoverPasswordPageLocators:
     INPUT_EMAIL = './/label[text()="Email"]/following-sibling::input'
     # Ссылка "Восстановить пароль"
     LINK_RECOVER_PASSWORD = './/a[text()="Восстановить пароль"]'
+    # Модальное окно
+    MODAL_WINDOW = [
+        './/section[contains(@class, "Modal_modal__P3_V5")]',
+        './/div[contains(@class, "Modal_modal_overlay__x2ZCr")]'
+    ]

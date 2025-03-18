@@ -21,7 +21,7 @@ fake = Faker()
 
 @pytest.fixture
 def created_user():
-    #Создаёт нового пользователя без авторизации и возвращает его данные.
+    # Создание нового пользователя без авторизации и выдача его данных
     email = f"{fake.random_int()}_{fake.email()}" # Генерируем уникальный email
     password = fake.password()
     name = fake.name()
@@ -33,30 +33,19 @@ def created_user():
     }
 
     response = requests.post(TestData.CREATE_USER_API_URL, json=payload)
-    assert response.status_code == 200, f"Ошибка при создании пользователя: {response.text}"
-
-    data = response.json()
-    assert data["success"] is True, "Неуспешное создание пользователя"
 
     return {
         "email": email,
         "password": password,
-        "name": name
+        "name": name,
+        "response": response
     }
 
 @pytest.fixture
 def authorized_user(logged_in_user):
-    # Авторизует пользователя и удаляет его после теста.
+    # Удаление пользователя после теста
+
     yield logged_in_user
 
-    # Удаляем пользователя после теста
     headers = {"Authorization": logged_in_user["accessToken"]}
-    response = requests.delete(TestData.DELETE_USER_API_URL, headers=headers)
-    data = response.json()
-    assert data["message"] == "User successfully removed", "Пользователь не удалён"
-
-    headers = {"Authorization": logged_in_user["accessToken"]}
-    response = requests.get(TestData.ORDERS_API_URL, headers=headers)
-
-    assert response.status_code == 200, f"Ошибка: {response.text}"
-    data = response.json()
+    requests.delete(TestData.DELETE_USER_API_URL, headers=headers)

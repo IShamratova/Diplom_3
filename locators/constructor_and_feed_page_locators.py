@@ -18,12 +18,8 @@ class ConstructorAndFeedPageLocators:
     BUTTON_FILLING_CHEESE = './/p[text()="Сыр с астероидной плесенью"]'
     # Кнопка закрытия модального окна
     BUTTON_CLOSE_MODAL = './/button[contains(@class, "close")]'
-
     # Счетчик количества ингредиентов
     COUNTER_QUANTITY_INGREDIENTS = BUTTON_BUN_FLUO + '/preceding-sibling::div/p[contains(@class, "counter")]'
-    # Счетчик стоимости
-    COUNTER_COST = './/p[text()="1976"]'
-
     # Заголовок «Соберите бургер»
     HEADER_ASSEMBLE_BURGER = './/h1[text()="Соберите бургер"]'
     # Заголовок всплывающего окна «Детали ингредиента»
@@ -34,7 +30,6 @@ class ConstructorAndFeedPageLocators:
     HEADER_ORDER_FEED = './/h1[text()="Лента заказов"]'
     # Заголовок всплывающего окна «идентификатор заказа»
     HEADER_ORDER_ID = './/p[text()="идентификатор заказа"]/preceding-sibling::h2'
-
     # Текст «Выполнено за все время»
     TEXT_ORDERS_DONE_TOTAL = './/p[text()="Выполнено за все время:"]/following-sibling::p'
     # Текст «Выполнено за сегодня»
@@ -53,12 +48,5 @@ class ConstructorAndFeedPageLocators:
     TEXT_ORDER_ID = './/p[text()="идентификатор заказа"]'
     # Текст названия заказа
     TEXT_ORDER_NAME = 'Spicy бессмертный флюоресцентный астероидный бургер'
-
-    # Секция «Булки»
-    SECTION_BUNS = './/span[text()="Булки"]/parent::div'
-    # Секция «Соусы»
-    SECTION_SAUCES = './/span[text()="Соусы"]/parent::div'
-    # Секция «Начинки»
-    SECTION_FILLING = ".//span[text()='Начинки']/parent::div"
     # Секция добавления ингредиентов
     SECTION_DRAG_BUN_HERE = './/section[contains(@class, "basket")]'

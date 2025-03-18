@@ -11,107 +11,116 @@ class BasePage:
 
     @allure.step('Открытие страницы по URL')
     def open_url(self, url):
-        #Открывает страницу по переданному URL
+        # Открытие страницы по URL
         self.driver.get(url)
 
     @allure.step('Поиск элемента по XPATH')
     def find_element_by_xpath(self, xpath):
-        # поиск и выдача элемента
+        # Поиск и выдача элемента
         return self.driver.find_element(By.XPATH, xpath)
 
-    @allure.step('Поиск элемента по XPATH')
+    @allure.step('Поиск элементов по XPATH')
     def find_elements_by_xpath(self, xpath):
-        # поиск и выдача элемента
+        # Поиск и выдача элементов
         return self.driver.find_elements(By.XPATH, xpath)
 
-    @allure.step('Ожидание появления элемента по XPATH с заданным таймаутом')
+    @allure.step('Явное ожидание появления элемента по XPATH с заданным таймаутом')
     def wait_for_visibility_of_element_by_xpath_by_timeout(self, xpath, timeout):
-        # явное ожидание для загрузки страницы
+        # Явное ожидание для загрузки страницы
         WebDriverWait(self.driver, timeout).until(
             expected_conditions.visibility_of_element_located((By.XPATH, xpath))
         )
 
-    @allure.step('Ожидание загрузки новой вкладки с заданным таймаутом')
+    @allure.step('Явное ожидание загрузки новой вкладки с заданным таймаутом')
     def wait_for_new_tab_by_timeout(self, timeout):
-        # явное ожидание появления новой вкладки
+        # Явное ожидание появления новой вкладки
         WebDriverWait(self.driver, timeout).until(
             expected_conditions.number_of_windows_to_be(2)
         )
 
-    @allure.step('Ожидание загрузки ресурса с заданным таймаутом')
+    @allure.step('Явное ожидание загрузки ресурса с заданным таймаутом')
     def wait_for_loading_url_by_timeout(self, url, timeout):
-        # явное ожидание для загрузки страницы
+        # Явное ожидание для загрузки URL
         WebDriverWait(self.driver, timeout).until(
             expected_conditions.url_to_be(url)
         )
 
-    @allure.step('Ожидание загрузки ресурса с заданным таймаутом')
+    @allure.step('Явное ожидание загрузки текста, отличающегося от переданного, с заданным таймаутом')
     def wait_for_text_differing_from_given_by_timeout(self, xpath, given_text, timeout):
-        # явное ожидание для загрузки страницы
+        # Явное ожидание для загрузки текста
         WebDriverWait(self.driver, timeout).until(
             lambda d: d.find_element(By.XPATH, xpath).text.strip() != str(given_text)
         )
 
     @allure.step('Прокрутка страницы до элемента по XPATH')
     def scroll_to_element_by_xpath(self, xpath):
-        # поиск элемента
+        # Поиск элемента
         element = self.driver.find_element(By.XPATH, xpath)
 
-        # прокрутка страницы до элемента
+        # Прокрутка страницы до элемента
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
 
     @allure.step('Установка видимости элемента через скрипт по XPATH')
-    def remove_elements_by_script(self):
-        # поиск элемента
-        element = self.driver.find_element(By.CSS_SELECTOR, ".Modal_modal__P3_V5")
-        # удаление элемента
-        self.driver.execute_script("arguments[0].remove();", element)
+    def remove_elements_by_script(self, xpaths):
 
-        # поиск элемента
-        element = self.driver.find_element(By.CSS_SELECTOR, ".Modal_modal_overlay__x2ZCr")
-        # удаление элемента
-        self.driver.execute_script("arguments[0].remove();", element)
+        for xpath in xpaths:
+            # Поиск элемента
+            element = self.driver.find_element(By.XPATH, xpath)
+            # Удаление элемента
+            self.driver.execute_script("arguments[0].remove();", element)
 
-    @allure.step('Нажатие на элемент через скрипт по XPATH')
+    @allure.step('Клик по элементу по XPATH')
+    def click_element_by_xpath(self, xpath):
+        # Поиск элемента и клик по нему
+        self.driver.find_element(By.XPATH, xpath).click()
+
+    @allure.step('Клик по элементу через скрипт по XPATH')
     def click_element_by_script_by_xpath(self, xpath):
-        # поиск элемента и клик по нему
+        # Поиск элемента
         element = self.driver.find_element(By.XPATH, xpath)
 
+        # Клик по элементу
         self.driver.execute_script("arguments[0].click();", element)
-
-    @allure.step('Нажатие на элемент по XPATH')
-    def click_element_by_xpath(self, xpath):
-        # поиск элемента и клик по нему
-        self.driver.find_element(By.XPATH, xpath).click()
 
     @allure.step('Ввод текста в поле по XPATH')
     def set_text_to_field_by_xpath(self, xpath, text):
-        # поиск поля и ввод данных
+        # Поиск поля и ввод данных в него
         self.driver.find_element(By.XPATH, xpath).send_keys(text)
 
     @allure.step('Переключение на новую вкладку')
     def switch_to_new_tab(self):
-        # явное ожидание для загрузки новой вкладки
+        # Явное ожидание для загрузки новой вкладки
         self.wait_for_new_tab_by_timeout(10)
 
-        # получение списка всех вкладок
+        # Получение списка всех вкладок
         windows = self.driver.window_handles
 
-        # переключение на новую вкладку
+        # Переключение на новую вкладку
         self.driver.switch_to.window(windows[1])
 
     @allure.step('Проверка адреса страницы')
     def check_url(self, url):
-        # явное ожидание для загрузки новой страницы dzen
+        # Явное ожидание для загрузки новой страницы dzen
         self.wait_for_loading_url_by_timeout(url, 10)
 
+        # Сравнение текущего URL с переданным
         assert self.driver.current_url == url
+
+    @allure.step('Проверка нахождения текста в адресе страницы')
+    def check_text_in_current_url(self, text):
+
+        # Сравнение находится ли текст внутри текущего URL
+        assert text in self.driver.current_url
 
     @allure.step('Перетаскивание элемента')
     def drag_n_drop_element(self, source_element_xpath, target_element_xpath):
+        # Элемент перетаскивания
         source = self.find_element_by_xpath(source_element_xpath)
+
+        # Элемент целевой области перетаскивания
         target = self.find_element_by_xpath(target_element_xpath)
 
+        # Функция для работы перетаскивания
         drag_and_drop_js = """
         function simulateDragDrop(sourceNode, destinationNode) {
             var EVENT_TYPES = {
@@ -157,5 +166,5 @@ class BasePage:
         }
         """
 
-        # Выполняем функцию с нашими элементами
+        # Выполнение функции для перетаскивания элементами
         self.driver.execute_script(drag_and_drop_js + "simulateDragDrop(arguments[0], arguments[1]);", source, target)
