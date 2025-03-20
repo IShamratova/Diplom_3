@@ -52,6 +52,13 @@ class BasePage:
             lambda d: d.find_element(By.XPATH, xpath).text.strip() != str(given_text)
         )
 
+    @allure.step('Явное ожидание загрузки текста, равному переданному, с заданным таймаутом')
+    def wait_for_text_equals_to_given_by_timeout(self, xpath, given_text, timeout):
+        # Явное ожидание для загрузки текста
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: d.find_element(By.XPATH, xpath).text.strip() == str(given_text)
+        )
+
     @allure.step('Прокрутка страницы до элемента по XPATH')
     def scroll_to_element_by_xpath(self, xpath):
         # Поиск элемента

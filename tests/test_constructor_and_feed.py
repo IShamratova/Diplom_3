@@ -1,9 +1,11 @@
+import allure
 from data.data import TestData
 from pages.constructor_and_feed_page import ConstructorAndFeedPage
 
 
 class TestConstructorAndFeed:
 
+    @allure.title('Проверки на страницах "Конструктор" и "Лента заказов"')
     def test_constructor_and_feed(self, driver, created_user):
         # Создание объекта страницы
         constructor_and_feed_page = ConstructorAndFeedPage(driver)

@@ -1,6 +1,5 @@
 import allure
 from data.data import TestData
-from locators.constructor_and_feed_page_locators import ConstructorAndFeedPageLocators
 from locators.recover_password_page_locators import RecoverPasswordPageLocators
 from pages.base_page import BasePage
 
@@ -16,7 +15,7 @@ class RecoverPasswordPage(BasePage):
 
         # Клик по кнопке "Личный Кабинет"
         self.click_element_by_script_by_xpath(
-            ConstructorAndFeedPageLocators.BUTTON_PERSONAL_ACCOUNT
+            RecoverPasswordPageLocators.BUTTON_PERSONAL_ACCOUNT
         )
 
         # Явное ожидание для загрузки ссылки "Восстановить пароль"

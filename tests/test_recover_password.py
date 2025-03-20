@@ -1,9 +1,11 @@
+import allure
 from data.data import TestData
 from pages.recover_password_page import RecoverPasswordPage
 
 
 class TestRecoverPassword:
 
+    @allure.title('Проверка на странице "Восстановление пароля"')
     def test_recover_password(self, driver, created_user):
         # Создание объекта страницы
         recover_password_page = RecoverPasswordPage(driver)

@@ -1,11 +1,11 @@
+import allure
 from data.data import TestData
-from locators.constructor_and_feed_page_locators import ConstructorAndFeedPageLocators
-from locators.personal_account_page_locators import PersonalAccountPageLocators
 from pages.order_page import OrderPage
 
 
 class TestOrder:
 
+    @allure.title('Проверка создания заказа')
     def test_logged_user_can_create_order(self, driver, created_user):
         # Создание объекта страницы
         order_page = OrderPage(driver)
@@ -22,6 +22,7 @@ class TestOrder:
         # Проверка идентификатора созданного заказа
         order_page.check_created_order_id("9999")
 
+    @allure.title('Проверка заказа в работе')
     def test_order_in_work(self, driver, created_user):
         # Создание объекта страницы
         order_page = OrderPage(driver)
@@ -50,6 +51,7 @@ class TestOrder:
         # Проверка нахождения номера созданного заказа в разделе "В работе"
         order_page.check_created_order_id_in_work(created_order_id)
 
+    @allure.title('Проверка счетчиков заказа')
     def test_order_counts(self, driver, created_user):
         # Создание объекта страницы
         order_page = OrderPage(driver)
@@ -99,6 +101,7 @@ class TestOrder:
         # Проверка увеличения значения счётчика "Выполнено за сегодня"
         order_page.check_incrementation_of_orders_count(value_count_orders_today, new_value_count_orders_today)
 
+    @allure.title('Проверка отображения заказов на странице «Лента заказов»')
     def test_order_history(self, driver, created_user):
         # Создание объекта страницы
         order_page = OrderPage(driver)

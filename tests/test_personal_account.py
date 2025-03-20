@@ -1,9 +1,11 @@
+import allure
 from data.data import TestData
 from pages.personal_account_page import PersonalAccountPage
 
 
 class TestPersonalAccount:
 
+    @allure.title('Проверки на странице "Личный кабинет"')
     def test_personal_account(self, driver, created_user):
         # Создание объекта страницы
         personal_account_page = PersonalAccountPage(driver)

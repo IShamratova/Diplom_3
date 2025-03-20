@@ -4,6 +4,7 @@ from faker import Faker
 from data.data import TestData
 from utils.driver_factory import DriverFactory
 
+
 @pytest.fixture(params=["chrome", "firefox"])
 def driver(request):
     # Настройка драйверов браузеров

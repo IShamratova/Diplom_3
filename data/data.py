@@ -17,6 +17,5 @@ class TestData:
         "reset_password": "reset-password"
     }
 
-    EMAIL_TEXT = "R@dev_city.ru"
-    PASSWORD_TEXT = "dev_city"
+    EMAIL_TEXT = "ya@ya.ya"
 

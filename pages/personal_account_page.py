@@ -1,6 +1,5 @@
 import allure
 from data.data import TestData
-from locators.constructor_and_feed_page_locators import ConstructorAndFeedPageLocators
 from locators.personal_account_page_locators import PersonalAccountPageLocators
 from pages.base_page import BasePage
 
@@ -16,7 +15,7 @@ class PersonalAccountPage(BasePage):
 
         # Клик по кнопке "Личный Кабинет"
         self.click_element_by_script_by_xpath(
-            ConstructorAndFeedPageLocators.BUTTON_PERSONAL_ACCOUNT
+            PersonalAccountPageLocators.BUTTON_PERSONAL_ACCOUNT
         )
 
         # Ввод персональных данных
@@ -34,7 +33,7 @@ class PersonalAccountPage(BasePage):
 
         # Явное ожидание для загрузки страницы после входа
         self.wait_for_visibility_of_element_by_xpath_by_timeout(
-            ConstructorAndFeedPageLocators.BUTTON_ORDER,
+            PersonalAccountPageLocators.BUTTON_ORDER,
             3
         )
 
@@ -42,7 +41,7 @@ class PersonalAccountPage(BasePage):
     def click_personal_account_button(self):
         # Клик по кнопке "Личный Кабинет"
         self.click_element_by_script_by_xpath(
-            ConstructorAndFeedPageLocators.BUTTON_PERSONAL_ACCOUNT
+            PersonalAccountPageLocators.BUTTON_PERSONAL_ACCOUNT
         )
 
         # Явное ожидание для загрузки страницы профиля
