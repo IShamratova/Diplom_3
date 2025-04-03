@@ -10,8 +10,11 @@ def driver(request):
     # Настройка драйверов браузеров
     driver = DriverFactory.get_driver(request.param)
 
-    # Раскрытие окна драйвера
-    driver.maximize_window()
+    # Устанавливаем позицию окна в левый верхний угол
+    driver.set_window_position(0, 0)
+
+    # Устанавливаем размер окна
+    driver.set_window_size(1280, 800)
 
     yield driver
 
